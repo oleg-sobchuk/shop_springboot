@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Add product</title>
+</head>
+<body>
+    <form action = "#" th:action = "@{/addProduct}" th:object="${product}" method = "post">
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>
+                    <input type="text" th:field="*{name}"/>
+                    <span style="color: red" th:errors="*{name}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>
+                    <input type="text" th:field="*{desc}"/>
+                    <span style="color: red" th:errors="*{desc}"></span>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" name="add" value="Add product"/>
+        <input type="submit" name="cancel" value="Cancel"/>
+
+
+    </form>
+
+</body>
+</html>

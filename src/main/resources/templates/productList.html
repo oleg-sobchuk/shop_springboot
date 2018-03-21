@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of products</title>
+</head>
+<body>
+    <h1>List of products:</h1>
+
+    <table border="1">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Add date</th>
+            <th>Update date</th>
+            <th>Added by</th>
+        </tr>
+        <tr th:each="product :${products}">
+            <td><a th:href="@{'/productInfo/'+${product.id}}" th:text="${product.id}"></a></td>
+            <td th:text="${product.name}">Name</td>
+            <td th:text="${product.desc}">Description</td>
+            <td th:text="${#dates.format(product.dateAdd,'yyyy/MM/dd HH:mm:ss')}">Add date</td>
+            <td th:text="${#dates.format(product.dateUpdate,'yyyy/MM/dd HH:mm:ss')}">Update date</td>
+            <td th:text="${product.ownerName}">Added by</td>
+            <td><a th:href="@{'/editProduct/'+${product.id}}">Edit product</a></td>
+            <td><a th:href="@{'/deleteProduct/'+${product.id}}">Delete</a></td>
+
+        </tr>
+    </table>
+    <p th:unless="${products} and ${products.size()}">store havn't products yet...</p>
+    <a th:href="@{/addProduct}">Add product</a>
+</body>
+</html>

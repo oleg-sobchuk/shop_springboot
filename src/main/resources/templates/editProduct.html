@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit product</title>
+</head>
+<body>
+    <form action = "#" th:action = "@{/editProduct}" th:object="${product}" method = "post">
+        <table>
+            <tr>
+                <td>Id</td>
+                <td><input type="text" th:field="*{id}" th:readonly="true"/></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>
+                    <input type="text" th:field="*{name}"/>
+                    <span style="color: red" th:errors="*{name}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>
+                    <input type="text" th:field="*{desc}"/>
+                    <span style="color: red" th:errors="*{desc}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Date when add</td>
+                <td><input type="text" th:field="*{dateAdd}" th:readonly="true"/></td>
+            </tr>
+            <tr>
+                <td>Date of last update</td>
+                <td><input type="text" th:field="*{dateUpdate}" th:readonly="true"/></td>
+            </tr>
+            <tr>
+                <td>Added by user</td>
+                <td><input type="text" th:field="*{ownerName}" th:readonly="true"/></td>
+            </tr>
+        </table>
+        <input type="submit" name="edit" value="Edit"/>
+        <input type="submit" name="cancel" value="Cancel"/>
+        <input type="submit" name="delete" value="Delete"/>
+
+
+    </form>
+</body>
+</html>

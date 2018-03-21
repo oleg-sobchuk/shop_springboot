@@ -28,12 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
-//    private String getPassword(String notEncodedPassword){
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(5);
-//        String encodedPassword = encoder.encode(notEncodedPassword);
-//        return encodedPassword;
-//    }
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()

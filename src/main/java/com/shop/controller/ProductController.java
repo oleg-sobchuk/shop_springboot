@@ -20,10 +20,6 @@ public class ProductController {
     @Autowired
     public ProductDao productDao;
 
-//    @ModelAttribute("product")
-//    public Product product(){
-//        return new Product();
-//    }
 
     @GetMapping(value = "/")
     public String home(){

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Shop with REST</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+
+
+
+        $(document).ready(function(){
+            showProductList();
+            alert("document.ready");
+
+            $("#productForm").submit(function (event) {
+                event.preventDefault();
+                alert("click");
+            });
+        });
+
+        function showProductList(){
+            $.ajax({
+                type: "GET",
+                url: window.location + "productList",
+                success:function(result){
+                            alert("GET: productList, SUCCESS!");
+                            if (result.status == "OK"){
+                                alert("STATUS OK!");
+                            }
+                            //var allProducts = "";
+                            //$('#getAllProducts ul').empty();
+                            $.each(result,function(i,product){
+                                var table = $('<tr>').append(
+                                    $('<td>').text(product.id),
+                                    $('<td>').text(product.name),
+                                    $('<td>').text(product.desc),
+                                    $('<td>').text(product.dateAdd),
+                                    $('<td>').text(product.dateUpdate),
+                                    $('<td>').text(product.ownerName)).appendTo('#productList');
+                                //$('#getAllProducts ul.productList').append(prod)
+                            });
+                        },
+                error: function(e){alert("ERROR: "+e);}
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+    <h1>My REST Shop</h1>
+
+    <h4>Add new product:</h4>
+    <form id="productForm">
+        <label for="productName">Product name</label>
+        <input type="text" id="productName" placeholder="Enter product name">
+
+        <label for="productDesc">Product description</label>
+        <input type="text" id="productDesc" placeholder="Enter product description">
+        <button type="submit">Add product</button>
+    </form>
+
+    <div id="postResultDiv">
+    </div>
+
+    <table id="productList">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Adding date</th>
+            <th>Last update date</th>
+            <th>Added by</th>
+        </tr>
+    </table>
+
+
+</body>
+</html>

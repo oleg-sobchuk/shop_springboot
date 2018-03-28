@@ -26,6 +26,11 @@ public class ProductController {
         return "home";
     }
 
+    @GetMapping(value = "/rest/")
+    public String restHome(){
+        return "rest/restShop";
+    }
+
     @GetMapping(value = "/productList")
     public String productList(Model model){
         model.addAttribute("products", productDao.findAll());

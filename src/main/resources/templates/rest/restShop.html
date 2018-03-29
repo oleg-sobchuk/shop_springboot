@@ -6,75 +6,165 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-
-
-
         $(document).ready(function(){
             showProductList();
-            alert("document.ready");
+            //alert("document.ready");
 
             $("#productForm").submit(function (event) {
                 event.preventDefault();
-                alert("click");
+                $('#productList').empty();
+                //alert("click");
+                addProductPost();
+                //showProductList();
             });
+
+            $('#findProductByIdForm').submit(function (event) {
+                event.preventDefault();
+                $('#productInfo').empty();
+                findProductById();
+            })
         });
+
+        function findProductById() {
+            $.ajax({
+                type: "GET",
+                url: window.location + "findProduct/"+$('#productId').val(),
+                success:function(product){
+                    //alert("GET: productList, SUCCESS!");
+                    var tableName = '#productInfo';
+                    $('<tr>').append($('<td>').text('Product id:'),$('<td>').text(product.id)).appendTo(tableName);
+                    $('<tr>').append($('<td>').text('Product name:'),$('<td>').text(product.name)).appendTo(tableName);
+                    $('<tr>').append($('<td>').text('Product description:'),$('<td>').text(product.desc)).appendTo(tableName);
+                    $('<tr>').append($('<td>').text('Adding date:'),$('<td>').text(product.dateAdd)).appendTo(tableName);
+                    $('<tr>').append($('<td>').text('Last updated:'),$('<td>').text(product.dateUpdate)).appendTo(tableName);
+                    $('<tr>').append($('<td>').text('Added by:'),$('<td>').text(product.ownerName)).appendTo(tableName);
+                },
+                error: function(e){alert("FindProduct ERROR:"+e);}
+            });
+
+            //clear id in form
+            $('#productId').val("");
+        }
+
+        function addProductPost(){
+            var postData = {
+                name : $("#productName").val(),
+                desc : $("#productDesc").val()
+            }
+            var sendedData = JSON.stringify(postData);
+            $('#postResultDiv').append("Posted data: "+sendedData);
+
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+                type:"POST",
+                url:window.location+"addProduct",
+                data: JSON.stringify(postData),
+                dataType: 'json',
+                success:function (result) {
+                    $('#postResultDiv').append("<br>Recived data: SUCCESS - " + JSON.stringify(result));
+                    //alert("POST: SUCCESS");
+                },
+                error:function (e) {
+                    $('#postResultDiv').append(" Recived data: ERROR - " + e);
+                    //alert("POST: error");
+                }
+            })
+            resetAddingData();
+            showProductList();
+        };
+
+        function resetAddingData(){
+            $("#productName").val("");
+            $("#productDesc").val("");
+        }
 
         function showProductList(){
             $.ajax({
                 type: "GET",
                 url: window.location + "productList",
                 success:function(result){
-                            alert("GET: productList, SUCCESS!");
-                            if (result.status == "OK"){
-                                alert("STATUS OK!");
-                            }
-                            //var allProducts = "";
-                            //$('#getAllProducts ul').empty();
-                            $.each(result,function(i,product){
-                                var table = $('<tr>').append(
-                                    $('<td>').text(product.id),
-                                    $('<td>').text(product.name),
-                                    $('<td>').text(product.desc),
-                                    $('<td>').text(product.dateAdd),
-                                    $('<td>').text(product.dateUpdate),
-                                    $('<td>').text(product.ownerName)).appendTo('#productList');
-                                //$('#getAllProducts ul.productList').append(prod)
-                            });
+                            //alert("GET: productList, SUCCESS!");
+                            resultToTable(result,'#productList');
                         },
-                error: function(e){alert("ERROR: "+e);}
+                error: function(e){alert("ShowTable ERROR:"+e);}
             });
         }
+
+        function resultToTable(products, tableName) {
+
+            //clear table
+            $(tableName).empty();
+
+            //table header
+            var table = $('<tr>').append(
+                $('<th>').text("Id"),
+                $('<th>').text("Product name"),
+                $('<th>').text("Description"),
+                $('<th>').text("Adding date"),
+                $('<th>').text("Last updated"),
+                $('<th>').text("Added by")).appendTo(tableName);
+
+            //table data
+            $.each(products,function(i,product){
+                var table = $('<tr>').append(
+                    $('<td>').text(product.id),
+                    $('<td>').text(product.name),
+                    $('<td>').text(product.desc),
+                    $('<td>').text(product.dateAdd),
+                    $('<td>').text(product.dateUpdate),
+                    $('<td>').text(product.ownerName)).appendTo(tableName);
+            });
+        }
+
 
     </script>
 
 </head>
 <body>
     <h1>My REST Shop</h1>
-
-    <h4>Add new product:</h4>
     <form id="productForm">
-        <label for="productName">Product name</label>
-        <input type="text" id="productName" placeholder="Enter product name">
-
-        <label for="productDesc">Product description</label>
-        <input type="text" id="productDesc" placeholder="Enter product description">
-        <button type="submit">Add product</button>
+        <fieldset style="width: min-content">
+        <legend>Add new product:</legend>
+            <table>
+                <tr>
+                    <td nowrap>Product name:</td>
+                    <td><input type="text" id="productName" placeholder="Enter product name"></td>
+                </tr>
+                <tr>
+                    <td nowrap>Product description:</td>
+                    <td><input type="text" id="productDesc" placeholder="Enter product description"></td>
+                </tr>
+            </table>
+            <button type="submit">Add product</button>
+        </fieldset>
     </form>
 
     <div id="postResultDiv">
     </div>
+    <br>
 
-    <table id="productList">
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Adding date</th>
-            <th>Last update date</th>
-            <th>Added by</th>
-        </tr>
+    <label for="productList">Product list:</label>
+    <table id="productList" border="1">
     </table>
 
+    <form id="findProductByIdForm">
+        <fieldset style="width: min-content">
+            <legend>Find product by id:</legend>
+            <table>
+                <tr>
+                    <td nowrap=""><button type="submit">Find product</button></td>
+                    <td><input type="text" id="productId" placeholder="Enter id of product"></td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+
+    <label for="productInfo">Search result:</label>
+    <table id="productInfo" border="1">
+    </table>
 
 </body>
 </html>

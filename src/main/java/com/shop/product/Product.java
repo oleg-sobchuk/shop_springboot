@@ -1,15 +1,19 @@
 package com.shop.product;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
 @Table(name="products")
 public class Product {
+
+    public static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
     @Id
     @GeneratedValue
@@ -29,11 +33,13 @@ public class Product {
     @Column(name="description")
     private String desc;
 
-    @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
+    @DateTimeFormat(pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @Column(name="date_add")
     private Date dateAdd;
 
-    @DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
+    @DateTimeFormat(pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     @Column(name="date_update")
     private Date dateUpdate;
 
